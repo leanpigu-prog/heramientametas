@@ -3,30 +3,50 @@
  * Utiliza pdfmake para generar reportes de metas de matriculados
  */
 
-// Cargar pdfmake desde CDN
+// Cargar pdfmake desde CDN (vfs_fonts depende de pdfmake, por eso va en su onload)
+const PDFMAKE_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12';
 function loadPdfMake() {
-  if (typeof pdfMake === 'undefined') {
-    const script1 = document.createElement('script');
-    script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.5.0/pdfmake.min.js';
-    document.head.appendChild(script1);
-
+  if (typeof pdfMake !== 'undefined' || document.getElementById('pdfmake-lib')) return;
+  const script1 = document.createElement('script');
+  script1.id = 'pdfmake-lib';
+  script1.src = PDFMAKE_CDN + '/pdfmake.min.js';
+  script1.onload = () => {
     const script2 = document.createElement('script');
-    script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.5.0/vfs_fonts.js';
-    script2.onload = () => console.log('pdfMake cargado');
+    script2.src = PDFMAKE_CDN + '/vfs_fonts.js';
+    script2.onload = () => console.log('pdfMake listo');
+    script2.onerror = () => console.error('No se pudo cargar vfs_fonts.js');
     document.head.appendChild(script2);
-  }
+  };
+  script1.onerror = () => console.error('No se pudo cargar pdfmake.min.js');
+  document.head.appendChild(script1);
 }
 
 // Inicializar pdfMake al cargar
 loadPdfMake();
+
+// Ejecuta `accion` cuando pdfMake (y sus fuentes) estén listos; reintenta hasta ~6s.
+function conPdfMake(accion) {
+  if (typeof pdfMake !== 'undefined' && pdfMake.vfs) { accion(); return; }
+  loadPdfMake();
+  let intentos = 0;
+  const t = setInterval(() => {
+    if (typeof pdfMake !== 'undefined' && pdfMake.vfs) {
+      clearInterval(t);
+      accion();
+    } else if (++intentos > 40) {
+      clearInterval(t);
+      alert('No se pudo cargar la librería de PDF. Revisa tu conexión a internet e inténtalo de nuevo.');
+    }
+  }, 150);
+}
 
 /**
  * Exporta un reporte de meta a PDF
  * @param {Object} programData - Datos del programa (nombre, campus, meta, etc.)
  */
 function exportMetaToPDF(programData) {
-  if (typeof pdfMake === 'undefined') {
-    alert('PDF library is loading. Please try again in a moment.');
+  if (typeof pdfMake === 'undefined' || !pdfMake.vfs) {
+    conPdfMake(() => exportMetaToPDF(programData));
     return;
   }
 

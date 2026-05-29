@@ -125,8 +125,8 @@ function generarReporteDesdeModal() {
  * Genera el PDF consolidado agrupado por campus y nivel.
  */
 function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
-  if (typeof pdfMake === 'undefined') {
-    alert('La librería de PDF aún se está cargando. Intenta de nuevo en un momento.');
+  if (typeof pdfMake === 'undefined' || !pdfMake.vfs) {
+    conPdfMake(() => exportReporteFiltrado(campusSel, nivelesSel, semParam));
     return;
   }
 
