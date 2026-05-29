@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -16,7 +16,7 @@
       <select id="sc" onchange="onCampus()"></select>
     </div>
     <div class="fl">
-      <label>Programa acadÃ©mico</label>
+      <label>Programa académico</label>
       <select id="sp" onchange="render()"></select>
     </div>
     <div class="sem-group">
@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="fl">
-      <label>AÃ±o de corte</label>
+      <label>Año de corte</label>
       <select id="sy" onchange="render()">
         <option value="2025">2025 (actual)</option>
         <option value="2024">2024</option>
@@ -36,12 +36,21 @@
         <option value="2021">2021</option>
       </select>
     </div>
+    <button class="rep-open-btn" onclick="abrirModalReporte()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="12" y1="13" x2="12" y2="19"></line>
+        <line x1="9" y1="16" x2="15" y2="16"></line>
+      </svg>
+      Reporte PDF
+    </button>
   </div>
 </div>
 
 <div style="background:var(--azpp);border-bottom:1px solid var(--g1);padding:7px 20px">
   <div style="max-width:860px;margin:0 auto">
-    <span id="ytag" style="display:inline-flex;align-items:center;gap:5px;background:var(--g3);color:#fff;border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700">HistÃ³rico completo</span>
+    <span id="ytag" style="display:inline-flex;align-items:center;gap:5px;background:var(--g3);color:#fff;border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700">Histórico completo</span>
   </div>
 </div>
 
@@ -49,16 +58,16 @@
   <div id="out"></div>
   <div class="marco">
     <button class="marco-btn" onclick="toggleMarco()">
-      Â¿CÃ³mo se calcula la meta?
+      ¿Cómo se calcula la meta?
       <svg class="marco-arr" id="marr" width="12" height="8" fill="none"><path d="M1 1l5 5 5-5" stroke="#8A99BB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <div class="marco-body" id="mb">
-      <div class="mc-item"><div class="mc-dot" style="background:var(--c1)"></div><div><b>C1</b> â€” Hist â‰ˆ Cupo MEN (Â±2): Meta = Cupo Ã— 1.10 Â· Acreditados: Ã— 1.05</div></div>
-      <div class="mc-item"><div class="mc-dot" style="background:var(--c2)"></div><div><b>C2</b> â€” Hist â‰ˆ PE + competencia supera UDES: Meta = min(PE Ã— 1.35, Cupo)</div></div>
-      <div class="mc-item"><div class="mc-dot" style="background:var(--c3)"></div><div><b>C3</b> â€” Hist &lt; PE + competencia supera UDES: Meta = PE Ã— 1.10</div></div>
-      <div class="mc-item"><div class="mc-dot" style="background:var(--c4)"></div><div><b>C4</b> â€” Hist &lt; PE + UDES lidera: Meta = Hist Ã— 1.10</div></div>
-      <div class="mc-item"><div class="mc-dot" style="background:var(--c5)"></div><div><b>C5</b> â€” Hist &gt; PE + UDES lidera: Meta = promedio adaptativo</div></div>
-      <div class="mc-note">Promedio adaptativo: 5 reglas que priorizan tendencias recientes sostenidas (umbral 15%, Ãºltimos 2â€“3 aÃ±os). ParticipaciÃ³n de mercado: UDES/(UDES+competencia privada). Solo IES privadas, mismo municipio, SNIES 2021â€“2024.</div>
+      <div class="mc-item"><div class="mc-dot" style="background:var(--c1)"></div><div><b>C1</b> — Hist ≈ Cupo MEN (±2): Meta = Cupo × 1.10 · Acreditados: × 1.05</div></div>
+      <div class="mc-item"><div class="mc-dot" style="background:var(--c2)"></div><div><b>C2</b> — Hist ≈ PE + competencia supera UDES: Meta = min(PE × 1.35, Cupo)</div></div>
+      <div class="mc-item"><div class="mc-dot" style="background:var(--c3)"></div><div><b>C3</b> — Hist &lt; PE + competencia supera UDES: Meta = PE × 1.10</div></div>
+      <div class="mc-item"><div class="mc-dot" style="background:var(--c4)"></div><div><b>C4</b> — Hist &lt; PE + UDES lidera: Meta = Hist × 1.10</div></div>
+      <div class="mc-item"><div class="mc-dot" style="background:var(--c5)"></div><div><b>C5</b> — Hist &gt; PE + UDES lidera: Meta = promedio adaptativo</div></div>
+      <div class="mc-note">Promedio adaptativo: 5 reglas que priorizan tendencias recientes sostenidas (umbral 15%, últimos 2–3 años). Participación de mercado: UDES/(UDES+competencia privada). Solo IES privadas, mismo municipio, SNIES 2021–2024.</div>
     </div>
   </div>
 </div>
@@ -66,6 +75,7 @@
 <script src="js/pdf-export.js"></script>
 <script src="js/app.js"></script>
 <script src="js/pdf-integration.js"></script>
+<script src="js/reporte-pdf.js"></script>
 </body>
 </html>
 

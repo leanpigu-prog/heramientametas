@@ -190,7 +190,6 @@ function exportMetaToPDF(programData) {
       }
     },
     defaultStyle: {
-      font: 'Helvetica',
       fontSize: 11
     }
   };
@@ -277,7 +276,6 @@ function exportReporteProgramas(programas, campus) {
       }
     },
     defaultStyle: {
-      font: 'Helvetica',
       fontSize: 10
     }
   };

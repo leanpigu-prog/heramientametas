@@ -14,83 +14,59 @@ function updateCurrentProgramData(data) {
 }
 
 /**
- * Obtiene datos del programa desde la interfaz renderizada
+ * Obtiene los datos del programa seleccionado leyéndolos directamente de la
+ * constante global D (app.js), replicando la lógica de cálculo de render().
+ * Más robusto que raspar el DOM.
  */
 function extractProgramDataFromUI() {
   try {
-    // Obtener selecciones actuales
     const campus = document.getElementById('sc')?.value || 'N/A';
     const program = document.getElementById('sp')?.value || 'N/A';
-    const semester = document.querySelector('.sb.on')?.textContent?.replace('Sem. ', '') || 'A';
+    const semester = (typeof sem !== 'undefined') ? sem : 'A';
     const year = parseInt(document.getElementById('sy')?.value || 2025);
 
-    // Obtener valores de la interfaz renderizada
-    const outDiv = document.getElementById('out');
-    if (!outDiv) return null;
+    const d = (typeof D !== 'undefined') ? D.find(x => x.campus === campus && x.programa === program) : null;
+    if (!d) return null;
 
-    // Buscar meta (número grande)
-    const metaNum = outDiv.querySelector('.meta-n');
-    const meta = metaNum ? parseInt(metaNum.textContent) : 0;
-
-    // Buscar condición (C1-C5)
-    const condTitle = outDiv.querySelector('.cond-title');
-    const condicion = condTitle ? condTitle.textContent.trim() : 'N/A';
-
-    // Buscar histórico
-    const indLabels = Array.from(outDiv.querySelectorAll('.ind-label'));
-    const historicoLabel = indLabels.find(l => l.textContent.includes('HISTÓRICO'));
-    const historico = historicoLabel
-      ? parseInt(historicoLabel.parentElement?.querySelector('.ind-val')?.textContent || 0)
-      : 0;
-
-    // Buscar cupo y PE
-    const allIndRows = outDiv.querySelectorAll('.ind-row');
-    let cupo = 0, pe = 0;
-
-    allIndRows.forEach(row => {
-      const label = row.querySelector('.ind-label')?.textContent || '';
-      const value = row.querySelector('.ind-val')?.textContent || '0';
-      if (label.includes('CUPO')) cupo = parseInt(value);
-      if (label.includes('PUNTO DE EQ')) pe = parseInt(value);
-    });
-
-    // Buscar datos de mercado
-    const mktBoxes = outDiv.querySelectorAll('.mkt-box');
-    let participacion = '0%', competenciaData = { total: 0, avg: 0 };
-
-    if (mktBoxes.length >= 2) {
-      // UDES (primer box)
-      const udesSub = mktBoxes[0].querySelector('.mkt-box-sub')?.textContent || '';
-      const participacionMatch = udesSub.match(/(\d+)%/);
-      participacion = participacionMatch ? participacionMatch[0] : '0%';
-
-      // Competencia (segundo box)
-      const compNum = mktBoxes[1].querySelector('.mkt-box-num')?.textContent || '0';
-      const compSub = mktBoxes[1].querySelector('.mkt-box-sub')?.textContent || '';
-      const avgMatch = compSub.match(/(\d+\.?\d*)/);
-      competenciaData = {
-        total: parseInt(compNum),
-        avg: avgMatch ? parseInt(avgMatch[0]) : 0
-      };
+    // Meta / condición / histórico según corte y semestre (igual que render())
+    let prom, meta, cond;
+    if (year === 2025) {
+      prom = semester === 'A' ? d.promA : d.promB;
+      meta = semester === 'A' ? d.metaA : d.metaB;
+      cond = semester === 'A' ? d.condA : d.condB;
+    } else {
+      prom = promAdaptativo(d.hist, semester, year);
+      const hd = semester === 'A' ? d.hayDemandaA : d.hayDemandaB;
+      const [m, c] = calcMeta(prom, d.cupo, d.pe, hd, d.acreditado || false);
+      meta = m; cond = c;
     }
 
-    // Buscar demanda (chip de demanda)
-    const demandChip = outDiv.querySelector('.dem-chip');
-    const demanda = demandChip ? demandChip.textContent.trim() : 'N/A';
+    // Mercado
+    const compV = semester === 'A' ? d.prom_comp_A : d.prom_comp_B;
+    const nIes = d.n_ies || 0;
+    const hayDem = semester === 'A' ? d.hayDemandaA : d.hayDemandaB;
+    const total = (prom || 0) + (compV || 0);
+    const pctU = total > 0 ? Math.round((prom || 0) / total * 100) : 0;
+    const promIes = (compV && nIes > 0) ? Math.round(compV / nIes) : 0;
+
+    const demanda = compV == null
+      ? 'Sin dato de competencia privada'
+      : (hayDem ? `Hay demanda · ${nIes} IES privada${nIes > 1 ? 's' : ''} en el municipio`
+                : 'UDES lidera el segmento privado');
 
     return {
       campus,
       program,
       semester,
       year,
-      meta,
-      historico,
-      cupo,
-      pe,
-      condicion,
+      meta: meta != null ? meta : 0,
+      historico: prom != null ? prom : 0,
+      cupo: d.cupo != null ? d.cupo : 0,
+      pe: d.pe != null ? d.pe : 0,
+      condicion: cond || '—',
       demanda,
-      participacion,
-      competencia: competenciaData
+      participacion: pctU + '%',
+      competencia: { total: compV != null ? Math.round(compV) : 0, avg: promIes }
     };
   } catch (e) {
     console.error('Error extracting program data:', e);
