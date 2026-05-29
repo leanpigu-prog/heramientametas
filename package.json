@@ -1,0 +1,37 @@
+{
+  "name": "metas-matriculados-udes",
+  "version": "5.1.0",
+  "description": "Herramienta interactiva para fijar metas de matriculados en primer curso por programa académico en la Universidad de Santander (UDES)",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server",
+    "dev": "npx http-server -p 8000",
+    "build": "echo 'No build required - vanilla HTML/CSS/JS'"
+  },
+  "keywords": [
+    "educación",
+    "matriculados",
+    "metas",
+    "UDES",
+    "universidad",
+    "planeación",
+    "análisis"
+  ],
+  "author": "Leonardo Andrés Pinto Guarguati",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/metas-matriculados-udes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tu-usuario/metas-matriculados-udes/issues"
+  },
+  "homepage": "https://github.com/tu-usuario/metas-matriculados-udes#readme",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
