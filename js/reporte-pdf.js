@@ -5,7 +5,8 @@
  * obtenerDescripcionCondicion (pdf-export.js).
  */
 
-const NIVELES = ['Pregrado', 'Especialización', 'Maestría', 'Doctorado'];
+const NIVELES = ['Pregrado', 'Posgrado'];
+const POSGRADO_NIVELES = ['Especialización', 'Maestría', 'Doctorado'];
 
 function camposUnicos() {
   return [...new Set(D.map(d => d.campus))];
@@ -142,44 +143,63 @@ function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
   const condsUsadas = new Set();
 
   campusSel.forEach(campus => {
-    nivelesSel.forEach(nivel => {
-      const grupo = D.filter(d => d.campus === campus && d.nivel === nivel);
+    nivelesSel.forEach(nivelLabel => {
+      const esPosgrado = nivelLabel === 'Posgrado';
+      const filtroNiveles = esPosgrado ? POSGRADO_NIVELES : [nivelLabel];
+      const grupo = D.filter(d => d.campus === campus && filtroNiveles.includes(d.nivel));
       if (!grupo.length) return;
+      // Ordenar posgrado: por nivel y luego por programa
+      if (esPosgrado) grupo.sort((a,b) => filtroNiveles.indexOf(a.nivel) - filtroNiveles.indexOf(b.nivel) || a.programa.localeCompare(b.programa));
       totalProgramas += grupo.length;
 
-      const body = [[
-        { text: 'Programa', bold: true, fillColor: azul, color: '#fff' },
-        { text: 'Cupo MEN', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
-        { text: 'PE', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
-        { text: 'Histórico', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
-        { text: `Meta 2026 ${semParam}`, bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
-        { text: 'Cond.', bold: true, fillColor: azul, color: '#fff', alignment: 'center' }
-      ]];
+      // Encabezado de tabla — Posgrado incluye columna Nivel
+      const headerRow = esPosgrado
+        ? [
+            { text: 'Nivel', bold: true, fillColor: azul, color: '#fff' },
+            { text: 'Programa', bold: true, fillColor: azul, color: '#fff' },
+            { text: 'Cupo MEN', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
+            { text: 'PE', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
+            { text: 'Histórico', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
+            { text: `Meta 2026 ${semParam}`, bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
+            { text: 'Cond.', bold: true, fillColor: azul, color: '#fff', alignment: 'center' }
+          ]
+        : [
+            { text: 'Programa', bold: true, fillColor: azul, color: '#fff' },
+            { text: 'Cupo MEN', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
+            { text: 'PE', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
+            { text: 'Histórico', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
+            { text: `Meta 2026 ${semParam}`, bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
+            { text: 'Cond.', bold: true, fillColor: azul, color: '#fff', alignment: 'center' }
+          ];
+
+      const body = [headerRow];
 
       grupo.forEach(d => {
         const meta = semParam === 'A' ? d.metaA : d.metaB;
         const cond = semParam === 'A' ? d.condA : d.condB;
         const prom = semParam === 'A' ? d.promA : d.promB;
         if (cond && cond !== '---') condsUsadas.add(cond);
-        body.push([
+        const fila = [
           { text: d.programa, fontSize: 9 },
           { text: d.cupo != null ? d.cupo.toString() : '—', alignment: 'center', fontSize: 9 },
           { text: d.pe != null ? d.pe.toString() : '—', alignment: 'center', fontSize: 9 },
           { text: prom != null ? prom.toString() : '—', alignment: 'center', fontSize: 9 },
           { text: meta != null ? meta.toString() : '—', alignment: 'center', bold: true, fontSize: 9 },
           { text: cond || '—', alignment: 'center', fontSize: 9 }
-        ]);
+        ];
+        if (esPosgrado) fila.unshift({ text: d.nivel, fontSize: 9, color: '#555' });
+        body.push(fila);
       });
 
       content.push({
-        text: `${campus}  ·  ${nivel}${grupo.length > 1 ? 's' : ''}  (${grupo.length})`,
+        text: `${campus}  ·  ${nivelLabel}  (${grupo.length})`,
         bold: true, color: azul, fontSize: 12, margin: [0, 12, 0, 6]
       });
       content.push({
         layout: 'lightHorizontalLines',
         table: {
           headerRows: 1,
-          widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
+          widths: esPosgrado ? ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto'] : ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
           body
         }
       });
