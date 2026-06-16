@@ -162,14 +162,14 @@ function render(){
         <div style="font-size:11px;color:var(--g3);margin-top:4px">est. · cuota de mercado: ${pctU!=null?pctU+'%':'—'}</div>
       </div>
       <div style="background:var(--g0);border-radius:8px;padding:12px 14px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g3);margin-bottom:6px">IES Privadas <span style="color:#c00;font-size:9px">condiciona C1–C5</span></div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g3);margin-bottom:6px">IES Privadas</div>
         ${iesBtn(nPriv,idPriv)}
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--g4);line-height:1;margin-top:6px">${compPriv!=null?Math.round(compPriv):'—'}</div>
         <div style="font-size:11px;color:var(--g3);margin-top:2px">${promPrivIes?promPrivIes+' est./IES':'sin datos'}</div>
         <div id="${idPriv}" style="display:none">${buildCompTable(d.comp_priv||[],false)}</div>
       </div>
       <div style="background:var(--g0);border-radius:8px;padding:12px 14px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g3);margin-bottom:6px">IES Públicas <span style="color:var(--g3);font-size:9px">referencial</span></div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g3);margin-bottom:6px">IES Públicas</div>
         ${iesBtn(nPub,idPub)}
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--g4);line-height:1;margin-top:6px">${compPub!=null?Math.round(compPub):'—'}</div>
         <div style="font-size:11px;color:var(--g3);margin-top:2px">${promPubIes?promPubIes+' est./IES':'sin datos'}</div>
