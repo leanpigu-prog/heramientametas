@@ -99,9 +99,8 @@ function render(){
 
   // C0: programa nuevo sin historial en este semestre → usar el otro semestre como proxy
   if(meta==null){const promOp=sem==='A'?pb:pa;if(promOp!=null){meta=Math.round(promOp*1.10);cond='C0';}}
-  // Piso MEI: la herramienta nunca puede quedar por debajo de la meta MEI
   const pisoMEI=sem==='A'?(d.metaMEI_A??null):(d.metaMEI_B??null);
-  if(pisoMEI!=null&&meta!=null&&meta<pisoMEI){meta=pisoMEI;cond=cond.replace('*','')+'*';}
+  if(pisoMEI!=null&&meta!=null&&meta<pisoMEI){meta=pisoMEI;}
 
   const prom=sem==='A'?pa:pb;
   const compPriv=sem==='A'?d.prom_comp_A:d.prom_comp_B;
@@ -109,7 +108,7 @@ function render(){
   const compPub=sem==='A'?(d.pub_A||null):(d.pub_B||null);
   const nPub=d.n_pub||0;
   const hayDem=sem==='A'?d.hayDemandaA:d.hayDemandaB;
-  const C=CM[cond.replace('*','')]||CM['---'];
+  const C=CM[cond]||CM['---'];
 
   const totalMkt=(prom||0)+(compPriv||0)+(compPub||0);
   const pctU=totalMkt>0?Math.round((prom||0)/totalMkt*100):null;
@@ -140,8 +139,8 @@ function render(){
 
   const alerta=meta!=null&&meta>d.cupo?`<div style="margin-top:10px;font-size:12px;background:#FEF3E2;border-left:3px solid var(--go);padding:8px 12px;border-radius:0 6px 6px 0;color:#7A4A00">⚠ Meta (${meta}) supera cupo MEN (${d.cupo}). Verificar con Vicerrectoría.</div>`:'';
 
-  const condTxt=d.cupoAnual?'Cupo fijo anual por resolución MEN.':(cond.endsWith('*')?C.txt+' · Ajustado al piso MEI.':C.txt);
-  const condTitle=d.cupoAnual?'📌 Cupo fijo anual (MEN)':cond+(cond.endsWith('*')?' · '+C.t+' (piso MEI)':' · '+C.t);
+  const condTxt=d.cupoAnual?'Cupo fijo anual por resolución MEN.':C.txt;
+  const condTitle=d.cupoAnual?'📌 Cupo fijo anual (MEN)':cond+' · '+C.t;
 
   // IDs únicos para las listas expandibles
   const uid=(c+'_'+d.programa).replace(/[^a-zA-Z0-9]/g,'_').replace(/_+/g,'_');
