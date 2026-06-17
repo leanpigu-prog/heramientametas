@@ -47,13 +47,13 @@ function calcMeta(prom,cupo,pe,hayDem,acreditado){
 
 
 const CM={
-  C0:{c:'var(--c0)',p:'var(--c0p)',ico:'🆕',t:'Programa nuevo',txt:'Sin historial en este semestre. Meta estimada desde el semestre opuesto (+10%).'},
-  C1:{c:'var(--c1)',p:'var(--c1p)',ico:'🎯',t:'Cerca del cupo máximo',txt:'Opera cerca del límite autorizado por el MEN.'},
-  C2:{c:'var(--c2)',p:'var(--c2p)',ico:'📈',t:'Equilibrio + competencia activa',txt:'Cubre costos y el mercado privado lo respalda.'},
-  C3:{c:'var(--c3)',p:'var(--c3p)',ico:'⚡',t:'Bajo PE + competencia activa',txt:'No cubre costos, pero el mercado existe. Meta aspiracional.'},
-  C4:{c:'var(--c4)',p:'var(--c4p)',ico:'⚠️',t:'Bajo PE + UDES lidera',txt:'No cubre costos pero supera a la competencia privada.'},
-  C5:{c:'var(--c5)',p:'var(--c5p)',ico:'📊',t:'Sostenible + UDES lidera',txt:'Programa sostenible. UDES capta más que sus competidores. Meta proyecta crecimiento del 10%.'},
-  C6:{c:'var(--c6)',p:'var(--c6p)',ico:'🚀',t:'Capacidad disponible + mercado activo',txt:'Opera por debajo del 50% de cupo con demanda privada existente. Meta orientada a recuperar participación.'},
+  C0:{c:'var(--c0)',p:'var(--c0p)',ico:'🆕',t:'Programa nuevo',txt:'Sin historial en este semestre. Meta = promedio del semestre opuesto × 1.10.'},
+  C1:{c:'var(--c1)',p:'var(--c1p)',ico:'🎯',t:'Cerca del cupo máximo',txt:'Opera cerca del límite MEN. Meta = cupo × 1.08 (acreditado) o cupo × 1.10.'},
+  C2:{c:'var(--c2)',p:'var(--c2p)',ico:'📈',t:'Equilibrio + competencia activa',txt:'Promedio ronda el PE y hay demanda privada. Meta = mín(PE × 1.50, cupo).'},
+  C3:{c:'var(--c3)',p:'var(--c3p)',ico:'⚡',t:'Bajo PE + competencia activa',txt:'No cubre costos pero el mercado existe. Meta aspiracional = PE × 1.10.'},
+  C4:{c:'var(--c4)',p:'var(--c4p)',ico:'⚠️',t:'Bajo PE + UDES lidera',txt:'No cubre costos y UDES lidera el segmento. Meta = promedio × 1.10.'},
+  C5:{c:'var(--c5)',p:'var(--c5p)',ico:'📊',t:'Sostenible + UDES lidera',txt:'Programa sostenible con alta utilización. Meta = mín(promedio × 1.10, cupo).'},
+  C6:{c:'var(--c6)',p:'var(--c6p)',ico:'🚀',t:'Capacidad disponible + mercado activo',txt:'Utiliza menos del 50% del cupo con demanda privada activa. Meta = mín(promedio × 1.25, cupo × 0.65).'},
   '---':{c:'var(--g3)',p:'var(--g1)',ico:'—',t:'Sin dato',txt:'Sin promedio histórico para este semestre.'},
 };
 
