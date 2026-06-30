@@ -114,7 +114,7 @@ function render(){
   const nPub=d.n_pub||0;
   const C=CM[cond]||CM['---'];
 
-  const totalMkt=(prom||0)+(compPriv||0)+(compPub||0);
+  const totalMkt=(prom||0)+(compPriv||0);
   const pctU=totalMkt>0?Math.round((prom||0)/totalMkt*100):null;
   const pctC=pctU!=null?100-pctU:null;
   const promPrivIes=(compPriv&&nPriv>0)?Math.round(compPriv/nPriv):null;
