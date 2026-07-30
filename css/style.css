@@ -8,6 +8,7 @@
   --c1:#003A8C;--c1p:#EBF2FC;--c2:#1B6B3A;--c2p:#E6F4EC;
   --c6:#0E6B7A;--c6p:#E3F4F7;
   --c3:#92520A;--c3p:#FEF3E2;--c4:#8B1A1A;--c4p:#FEECEC;--c5:#445069;--c5p:#F0F3F9;
+  --c7:#6E5B24;--c7p:#F5F1E3;
   --r:12px;
 }
 body{font-family:'Barlow',sans-serif;background:var(--g0);color:var(--gd);font-size:15px}

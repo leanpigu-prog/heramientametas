@@ -229,7 +229,7 @@ function obtenerDescripcionCondicion(cond) {
     'C3': 'Histórico < PE + competencia supera UDES: Meta = PE × 1.10',
     'C4': 'Histórico < PE + UDES lidera: Meta = Histórico × 1.10',
     'C5': 'Histórico > PE + UDES lidera: Meta = promedio adaptativo',
-    'NA': 'Sin admisión regular en este semestre: no se fija meta numérica'
+    'C7': 'Menos de 2 períodos válidos en este semestre puntual: Meta = Punto de Equilibrio (PE)'
   };
   return descripciones[cond] || 'Condición no identificada';
 }
