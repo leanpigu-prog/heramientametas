@@ -144,3 +144,53 @@ select:focus{outline:none;border-color:var(--az)}
 .rep-btn-pri:hover{background:var(--az2)}
 .rep-btn-pri:disabled{opacity:.6;cursor:default}
 
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DEMANDA DE CORRERÍA — Sección de análisis regional
+   ══════════════════════════════════════════════════════════════════════════ */
+.dem-marco{margin-top:1.5rem}
+
+/* Tabs */
+.dem-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.dem-tab{padding:5px 15px;border-radius:20px;border:1.5px solid var(--az3);background:transparent;color:var(--az2);font:600 12.5px 'Barlow',sans-serif;cursor:pointer;transition:background .14s,color .14s}
+.dem-tab.active{background:var(--az2);color:#fff;border-color:var(--az2)}
+.dem-tab:hover:not(.active){background:var(--azp)}
+
+/* Tabla */
+.dem-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--g1)}
+.dem-table{width:100%;border-collapse:collapse;font-size:12px;font-family:'Barlow',sans-serif}
+.dem-table thead th{background:var(--g0);color:var(--gd);font-weight:600;padding:8px 6px;text-align:center;border-bottom:2px solid var(--az);white-space:nowrap;position:sticky;top:0}
+.dem-table tbody tr:hover{background:#F0F5FF}
+.dem-table td{padding:6px 5px;border-bottom:1px solid var(--g1);vertical-align:middle}
+.dem-prog-th{min-width:180px;text-align:left!important}
+.dem-city{min-width:74px;font-size:11px}
+.dem-n{font-weight:400;color:#888;font-size:10px;display:block}
+.dem-snies-th{min-width:68px}
+
+/* Filas */
+.dem-prog{min-width:180px;font-weight:500;color:var(--gd)}
+.dem-cell{text-align:center;min-width:68px;padding:5px 4px!important}
+.dem-cell.low {background:#EBF3FF}
+.dem-cell.mid {background:#B8D4F5}
+.dem-cell.high{background:#5F9FE0;color:#fff}
+.dem-bar-wrap{height:3px;background:#D8E4F4;border-radius:2px;margin-bottom:3px}
+.dem-bar-fill{height:3px;background:var(--az2);border-radius:2px}
+.dem-pct{font-size:11px;color:inherit}
+.dem-snies-cell{text-align:center;color:var(--az2);font-weight:700;min-width:68px}
+.dem-pending{color:#B0B8CC;font-style:italic;font-size:11px}
+.dem-total{text-align:center;min-width:64px}
+
+/* Badges tipo */
+.dem-badge{display:inline-block;padding:1px 5px;border-radius:9px;font-size:10px;font-weight:700;margin-right:5px;vertical-align:middle}
+.dem-badge-tl  {background:#D4EDE0;color:#1E6B45}
+.dem-badge-tec {background:#D3E3F7;color:#003A8C}
+.dem-badge-prof{background:#FDF2CC;color:#7A5A00}
+
+/* Nota al pie */
+.dem-nota{font-size:11px;color:#8A99BB;margin-top:12px;border-top:1px solid var(--g1);padding-top:8px;line-height:1.5}
+
+@media(max-width:640px){
+  .dem-table{font-size:11px}
+  .dem-city{min-width:56px}
+  .dem-prog{min-width:130px}
+}

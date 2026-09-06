@@ -257,5 +257,132 @@ const camps=[...new Set(D.map(d=>d.campus))].sort();
 const sc=document.getElementById('sc');
 camps.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sc.appendChild(o);});
 onCampus();
+renderDemandaSection();
+
+// ══════════════════════════════════════════════════════════════════════════
+// SECCIÓN: Demanda de Correría por Municipio
+// Fuente: Correría UDES 2026 · 770 participantes · 8 municipios (n ≥ 10)
+// ══════════════════════════════════════════════════════════════════════════
+
+// Programas UDES existentes con equivalente en correría
+// Porcentajes = interesados / total participantes del municipio
+const CORRERIA_MAP = {
+  'Derecho':{ label:'Prof. Derecho Virtual', tipo:'prof', n:42, pct:5.5,
+    c:{Arauca:2.9, 'Vélez':8.7, 'San Gil':6.4, Barbosa:11.2, 'Charalá':7.3, Bucaramanga:4.2, 'Los Santos':8.3, Socorro:0.0}},
+  'Ingeniería de Software':{ label:'Prof. Desarrollo de Software', tipo:'prof', n:54, pct:7.0,
+    c:{Arauca:2.6, 'Vélez':12.5, 'San Gil':6.4, Barbosa:13.5, 'Charalá':17.1, Bucaramanga:4.2, 'Los Santos':12.5, Socorro:7.7}},
+  'Mercadeo y Publicidad':{ label:'Prof. Marketing Digital', tipo:'prof', n:51, pct:6.6,
+    c:{Arauca:3.6, 'Vélez':10.6, 'San Gil':5.3, Barbosa:11.2, 'Charalá':7.3, Bucaramanga:8.3, 'Los Santos':12.5, Socorro:23.1}},
+  'Ingeniería Agronómica':{ label:'Prof. Ing. Agronómica', tipo:'prof', n:33, pct:4.3,
+    c:{Arauca:3.2, 'Vélez':2.9, 'San Gil':1.1, Barbosa:6.7, 'Charalá':14.6, Bucaramanga:0.0, 'Los Santos':12.5, Socorro:7.7}},
+  'Enfermería':{ label:'TL. Aux. Enfermería', tipo:'tl', n:53, pct:6.9,
+    c:{Arauca:4.2, 'Vélez':11.5, 'San Gil':6.4, Barbosa:12.4, 'Charalá':14.6, Bucaramanga:0.0, 'Los Santos':12.5, Socorro:7.7}},
+  'Bacteriología y Laboratorio Clínico':{ label:'TL. Lab. Clínico', tipo:'tl', n:23, pct:3.0,
+    c:{Arauca:0.6, 'Vélez':12.5, 'San Gil':1.1, Barbosa:3.4, 'Charalá':2.4, Bucaramanga:4.2, 'Los Santos':0.0, Socorro:15.4}},
+  'Ingeniería Agroindustrial':{ label:'Tec. Prod. Agroindustrial', tipo:'tec', n:21, pct:2.7,
+    c:{Arauca:1.9, 'Vélez':2.9, 'San Gil':1.1, Barbosa:2.2, 'Charalá':2.4, Bucaramanga:0.0, 'Los Santos':0.0, Socorro:7.7}},
+  'Medicina Veterinaria':{ label:'Tec. Especies Menores', tipo:'tec', n:13, pct:1.7,
+    c:{Arauca:0.6, 'Vélez':4.8, 'San Gil':1.1, Barbosa:3.4, 'Charalá':2.4, Bucaramanga:0.0, 'Los Santos':0.0, Socorro:0.0}},
+};
+// Alias — mismo match para variantes del programa
+CORRERIA_MAP['Ingeniería de Software (Virtual)'] = CORRERIA_MAP['Ingeniería de Software'];
+CORRERIA_MAP['Enfermería (Valledupar)']           = CORRERIA_MAP['Enfermería'];
+CORRERIA_MAP['Medicina Veterinaria y Zootecnia']  = CORRERIA_MAP['Medicina Veterinaria'];
+
+// Programas potencialmente nuevos (sin equivalente actual en metas UDES)
+const CORRERIA_NUEVOS = [
+  {label:'Tec. Investigación Criminal', tipo:'tec', n:80, pct:10.4,
+    c:{Arauca:5.8, 'Vélez':16.3, 'San Gil':8.5, Barbosa:11.2, 'Charalá':19.5, Bucaramanga:20.8, 'Los Santos':20.8, Socorro:0.0}},
+  {label:'Tec. Marketing Digital', tipo:'tec', n:78, pct:10.1,
+    c:{Arauca:6.8, 'Vélez':22.1, 'San Gil':7.4, Barbosa:11.2, 'Charalá':4.9, Bucaramanga:8.3, 'Los Santos':20.8, Socorro:23.1}},
+  {label:'Tec. Sistemas Informáticos', tipo:'tec', n:56, pct:7.3,
+    c:{Arauca:2.6, 'Vélez':10.6, 'San Gil':7.4, Barbosa:14.6, 'Charalá':7.3, Bucaramanga:8.3, 'Los Santos':16.7, Socorro:7.7}},
+  {label:'Prof. Arquitectura', tipo:'prof', n:44, pct:5.7,
+    c:{Arauca:2.6, 'Vélez':9.6, 'San Gil':5.3, Barbosa:3.4, 'Charalá':12.2, Bucaramanga:4.2, 'Los Santos':20.8, Socorro:7.7}},
+  {label:'TL. Recreación y Deporte', tipo:'tl', n:40, pct:5.2,
+    c:{Arauca:2.6, 'Vélez':4.8, 'San Gil':5.3, Barbosa:5.6, 'Charalá':9.8, Bucaramanga:25.0, 'Los Santos':16.7, Socorro:7.7}},
+  {label:'TL. Turismo Bilingüe', tipo:'tl', n:38, pct:4.9,
+    c:{Arauca:1.3, 'Vélez':10.6, 'San Gil':6.4, Barbosa:9.0, 'Charalá':0.0, Bucaramanga:16.7, 'Los Santos':8.3, Socorro:0.0}},
+  {label:'Tec. Radiodiagnóstico', tipo:'tec', n:24, pct:3.1,
+    c:{Arauca:1.6, 'Vélez':7.7, 'San Gil':4.3, Barbosa:1.1, 'Charalá':2.4, Bucaramanga:0.0, 'Los Santos':12.5, Socorro:15.4}},
+  {label:'TL. Medios Audiovisuales', tipo:'tl', n:20, pct:2.6,
+    c:{Arauca:1.0, 'Vélez':2.9, 'San Gil':4.3, Barbosa:2.2, 'Charalá':4.9, Bucaramanga:4.2, 'Los Santos':12.5, Socorro:0.0}},
+  {label:'TL. Mercaderista', tipo:'tl', n:16, pct:2.1,
+    c:{Arauca:1.0, 'Vélez':2.9, 'San Gil':5.3, Barbosa:2.2, 'Charalá':0.0, Bucaramanga:4.2, 'Los Santos':4.2, Socorro:7.7}},
+  {label:'TL. Talento Humano', tipo:'tl', n:13, pct:1.7,
+    c:{Arauca:0.6, 'Vélez':1.0, 'San Gil':1.1, Barbosa:3.4, 'Charalá':2.4, Bucaramanga:4.2, 'Los Santos':8.3, Socorro:15.4}},
+];
+
+// TODO LUNES — rellenar con matrícula real por municipio de residencia (microdata SNIES)
+// Estructura: {'Nombre exacto programa UDES': {Arauca:n, Vélez:n, 'San Gil':n, Barbosa:n, ...}}
+const SNIES_CIUDAD = {};
+
+// ── Render ────────────────────────────────────────────────────────────────
+function renderDemandaSection() {
+  const CIUDADES = ['Arauca','Vélez','San Gil','Barbosa','Charalá','Bucaramanga','Los Santos','Socorro'];
+  const N_CIUDAD = {Arauca:309,'Vélez':104,'San Gil':94,Barbosa:89,'Charalá':41,Bucaramanga:24,'Los Santos':24,Socorro:13};
+
+  function buildTabla(filas) {
+    let h = `<div class="dem-wrap"><table class="dem-table">
+      <thead><tr>
+        <th class="dem-prog-th">Programa</th>
+        ${CIUDADES.map(c=>`<th class="dem-city">${c}<br><span class="dem-n">n=${N_CIUDAD[c]}</span></th>`).join('')}
+        <th class="dem-snies-th" title="Matriculados por municipio de residencia — SNIES">SNIES<br><span class="dem-n">matric.</span></th>
+        <th>Total</th>
+      </tr></thead><tbody>`;
+    filas.forEach(p=>{
+      const tipoCls = p.tipo==='tl'?'tl':p.tipo==='prof'?'prof':'tec';
+      const sniesRow = SNIES_CIUDAD[p._key] || {};
+      const sniesSum = Object.values(sniesRow).reduce((a,b)=>a+b,0);
+      h += `<tr>
+        <td class="dem-prog"><span class="dem-badge dem-badge-${tipoCls}">${p.tipo.toUpperCase()}</span>${p.label}</td>`;
+      CIUDADES.forEach(c=>{
+        const v = p.c[c]||0;
+        const heat = v===0?'':v<5?'low':v<10?'mid':'high';
+        h += `<td class="dem-cell ${heat}">
+          <div class="dem-bar-wrap"><div class="dem-bar-fill" style="width:${Math.min(v/25*100,100).toFixed(0)}%"></div></div>
+          <span class="dem-pct">${v===0?'—':v.toFixed(1)+'%'}</span>
+        </td>`;
+      });
+      h += `<td class="dem-snies-cell">${sniesSum>0?sniesSum:'<span class="dem-pending">↑ Lunes</span>'}</td>`;
+      h += `<td class="dem-total"><strong>${p.n}</strong><br><span class="dem-pct">${p.pct}%</span></td></tr>`;
+    });
+    h += `</tbody></table></div>`;
+    return h;
+  }
+
+  // Prepara listas
+  const existentes = Object.entries(CORRERIA_MAP)
+    .filter(([k],i,arr)=>arr.findIndex(([k2])=>k2===k)===i) // dedup aliases
+    .filter(([k])=>!['Ingeniería de Software (Virtual)','Enfermería (Valledupar)','Medicina Veterinaria y Zootecnia'].includes(k))
+    .map(([k,p])=>({...p, _key:k}));
+  const nuevos = CORRERIA_NUEVOS.map(p=>({...p, _key:p.label}));
+
+  const sec = document.getElementById('demandaCoreria');
+  if(!sec) return;
+  sec.innerHTML = `
+    <div class="dem-tabs">
+      <button class="dem-tab active" onclick="switchDemTab('exist',this)">Programas UDES existentes (${existentes.length})</button>
+      <button class="dem-tab" onclick="switchDemTab('nuevo',this)">Programas nuevos potenciales (${nuevos.length})</button>
+    </div>
+    <div id="demTabExist">${buildTabla(existentes)}</div>
+    <div id="demTabNuevo" hidden>${buildTabla(nuevos)}</div>
+    <p class="dem-nota">📋 Fuente: Correría UDES 2026 · 770 participantes · 8 municipios (n ≥ 10) · El % indica interesados / total participantes de cada municipio. La columna SNIES mostrará matriculados por municipio de residencia cuando los datos lleguen el lunes.</p>`;
+}
+
+function switchDemTab(tab, btn) {
+  document.querySelectorAll('.dem-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('demTabExist').hidden = (tab!=='exist');
+  document.getElementById('demTabNuevo').hidden = (tab!=='nuevo');
+}
+
+function toggleDemanda(btn) {
+  const body = document.getElementById('demandaCoreria');
+  const arr  = document.getElementById('demArr');
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  if(arr) arr.classList.toggle('open', !open);
+}
 
 

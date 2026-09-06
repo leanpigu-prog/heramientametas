@@ -42,6 +42,18 @@
 
 <div class="wrap">
   <div id="out"></div>
+
+  <!-- ── Demanda de Correría por Municipio ── -->
+  <div class="marco dem-marco">
+    <button class="marco-btn" onclick="toggleDemanda(this)">
+      🗺️ Demanda de correría por municipio
+      <svg class="marco-arr" id="demArr" width="12" height="8" fill="none"><path d="M1 1l5 5 5-5" stroke="#8A99BB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="marco-body" id="demandaCoreria" style="display:none">
+      <!-- Renderizado por renderDemandaSection() en app.js -->
+    </div>
+  </div>
+
   <div class="marco">
     <button class="marco-btn" onclick="toggleMarco()">
       ¿Cómo se calcula la meta?
