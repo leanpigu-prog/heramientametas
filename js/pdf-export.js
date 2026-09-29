@@ -43,6 +43,19 @@ function conPdfMake(accion) {
 const PDF_AZUL = '#003A8C';
 const PDF_DORADO = '#C49A22';
 
+function pdfHeader(titulo) {
+  const ancho = 110;
+  return {
+    margin: [40, 16, 40, 0],
+    columns: [
+      typeof LOGO_UDES !== 'undefined'
+        ? { image: LOGO_UDES, width: ancho, height: ancho / LOGO_UDES_RATIO }
+        : { text: 'Universidad de Santander', bold: true, color: PDF_AZUL },
+      { text: titulo, bold: true, fontSize: 10, color: PDF_AZUL, alignment: 'right', margin: [0, 12, 0, 0] }
+    ]
+  };
+}
+
 function linea(y, color, ancho) {
   return { canvas: [{ type: 'line', x1: 0, y1: y, x2: 515, y2: y, lineWidth: ancho || 1, lineColor: color || PDF_AZUL }] };
 }
@@ -177,16 +190,16 @@ function exportMetaToPDF(programData) {
       fontSize: 10, margin: [0, 0, 0, 6]
     },
     {
-      text: `El promedio histórico es la media simple de los períodos con matrícula válida de este semestre (${rango}); se excluyen períodos sin datos, en cero y los marcados como atípicos. Cuando una meta calculada queda por debajo del piso interno de Mercadeo, se eleva a ese piso. La competencia proviene de SNIES 2021–2024 para IES del área metropolitana; solo las IES privadas determinan la condición.` +
-        (year === 2027 ? ' La matrícula 2026 de otras IES aún no está publicada por SNIES, por lo que el análisis de competencia de la meta 2027 hereda los datos existentes.' : ''),
+      text: `El promedio histórico es la media simple de los períodos con matrícula válida de este semestre (${rango}); se excluyen períodos sin datos, en cero y los marcados como atípicos. Cuando una meta calculada queda por debajo del piso interno de Mercadeo, se eleva a ese piso. La competencia proviene de SNIES 2021–2025 para IES del área metropolitana; solo las IES privadas determinan la condición.` +
+        (year === 2027 ? ' La matrícula 2026 de otras IES aún no está publicada por SNIES, por lo que el análisis de competencia de la meta 2027 usa los datos SNIES 2021–2025.' : ''),
       fontSize: 9, color: '#666', italics: true
     }
   ];
 
   const docDefinition = {
     pageSize: 'A4',
-    pageMargins: [40, 50, 40, 40],
-    header: { text: `REPORTE DE META DE MATRICULADOS · UDES ${year}`, bold: true, fontSize: 11, color: PDF_AZUL, alignment: 'center', margin: [0, 20, 0, 0] },
+    pageMargins: [40, 70, 40, 40],
+    header: pdfHeader(`REPORTE DE META DE MATRICULADOS · UDES ${year}`),
     footer: (currentPage, pageCount) => ({
       text: `Página ${currentPage} de ${pageCount}  ·  Generado ${new Date().toLocaleDateString('es-CO')}`,
       alignment: 'center', fontSize: 9, color: '#999'

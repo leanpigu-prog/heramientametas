@@ -25,7 +25,7 @@ function buildCompTable(list,showCity){
       ${showCity?'<th style="padding:4px 6px;text-align:left;font-size:11px;color:var(--g3)">Ciudad</th>':''}
       <th style="padding:4px 6px;text-align:right;font-size:11px;color:var(--g3)">Prom A</th>
       <th style="padding:4px 6px;text-align:right;font-size:11px;color:var(--g3)">Prom B</th>
-      <th style="padding:4px 6px;text-align:right;font-size:11px;color:var(--g3)">Total 21-24</th>
+      <th style="padding:4px 6px;text-align:right;font-size:11px;color:var(--g3)">Total 21-25</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
@@ -85,7 +85,6 @@ function setSem(s){
   sem=s;
   document.getElementById('ba').className='sb'+(s==='A'?' on':'');
   document.getElementById('bb').className='sb'+(s==='B'?' on':'');
-  if(window.moveSeg)moveSeg();
   render();
 }
 
@@ -215,7 +214,7 @@ function render(){
       </div>
     </div>
     ${demChip}
-    ${yr==='2027'?'<div style="font-size:11px;color:var(--go);margin-top:6px">Competencia: datos SNIES 2021–2024 heredados; la matrícula 2026 de otras IES aún no está publicada.</div>':''}
+    ${yr==='2027'?'<div style="font-size:11px;color:var(--go);margin-top:6px">Competencia: datos SNIES 2021–2025; la matrícula 2026 de otras IES aún no está publicada.</div>':''}
     <div style="font-size:11px;color:var(--g3);margin-top:8px;padding-top:6px;border-top:1px solid var(--g1)">
       Área de influencia: ${CAMPUS_METROS[c]||c}
     </div>
@@ -289,7 +288,6 @@ function onYear(){
   const yv=document.getElementById('sy').value;
   const b26=document.getElementById('y26'),b27=document.getElementById('y27');
   if(b26){b26.className='sb'+(yv==='2026'?' on':'');b27.className='sb'+(yv==='2027'?' on':'');}
-  if(window.moveSeg)moveSeg();
   const t=document.getElementById('ttl');
   if(t)t.textContent='Herramienta Metas Matriculados · UDES '+document.getElementById('sy').value;
   document.title='Herramienta Metas UDES '+document.getElementById('sy').value;

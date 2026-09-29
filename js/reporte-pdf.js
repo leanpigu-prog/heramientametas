@@ -235,18 +235,15 @@ function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
       text: [{ text: c + ': ', bold: true }, obtenerDescripcionCondicion(c)],
       fontSize: 9, color: '#555', margin: [0, 2, 0, 0]
     }));
-    if (anioSel() === '2027') content.push({ text: 'Meta 2027 = media simple 2019–2026 con las mismas condiciones que 2026; la columna "vs 2026" es la diferencia frente a la meta 2026. La matrícula 2026 de otras IES aún no está publicada por SNIES: la competencia hereda los datos existentes.', fontSize: 9, color: '#666', italics: true, margin: [0, 14, 0, 0] });
+    if (anioSel() === '2027') content.push({ text: 'Meta 2027 = media simple 2019–2026 con las mismas condiciones que 2026; la columna "vs 2026" es la diferencia frente a la meta 2026. La matrícula 2026 de otras IES aún no está publicada por SNIES: la competencia usa los datos SNIES 2021–2025.', fontSize: 9, color: '#666', italics: true, margin: [0, 14, 0, 0] });
     content.push({ text: 'Marco metodológico', bold: true, color: azul, fontSize: 12, margin: [0, 16, 0, 6] });
     content.push(...leyenda);
   }
 
   const docDefinition = {
     pageSize: 'A4',
-    pageMargins: [40, 50, 40, 40],
-    header: {
-      text: `REPORTE DE METAS UDES · ${anioSel()} ${semParam}`,
-      bold: true, fontSize: 14, color: azul, alignment: 'center', margin: [0, 18, 0, 0]
-    },
+    pageMargins: [40, 70, 40, 40],
+    header: pdfHeader(`REPORTE DE METAS UDES · ${anioSel()} ${semParam}`),
     footer: (currentPage, pageCount) => ({
       text: `Página ${currentPage} de ${pageCount}  ·  ${totalProgramas} programa(s)`,
       alignment: 'center', fontSize: 9, color: '#999'

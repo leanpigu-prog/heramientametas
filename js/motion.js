@@ -7,21 +7,6 @@
 
   const EASE = 'expo.out';
 
-  window.moveSeg = function (animate) {
-    document.querySelectorAll('.sem-btns').forEach(g => {
-      const ind = g.querySelector('.seg-ind');
-      const on = g.querySelector('.sb.on');
-      if (!ind || !on) return;
-      g.classList.add('seg-ready');
-      const vars = { x: on.offsetLeft, width: on.offsetWidth };
-      if (animate === false || reduce) gsap.set(ind, vars);
-      else gsap.to(ind, { ...vars, duration: 0.28, ease: EASE, overwrite: 'auto' });
-    });
-  };
-  window.addEventListener('load', () => moveSeg(false));
-  window.addEventListener('resize', () => moveSeg(false));
-  document.addEventListener('DOMContentLoaded', () => moveSeg(false));
-
   if (typeof ScrollTrigger !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
     const bar = document.querySelector('.bar');
