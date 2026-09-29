@@ -1,0 +1,6 @@
+*.xlsx
+data/
+*.bak*
+CONTRIBUTING.md
+QUICKSTART.md
+package.json
