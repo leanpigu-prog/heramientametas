@@ -15,7 +15,7 @@ body{font-family:'Barlow',sans-serif;background:var(--g0);color:var(--gd);font-s
 
 /* ── CONTROLES ── */
 .bar{background:var(--w);border-bottom:1px solid var(--g1);padding:12px 20px 14px;position:sticky;top:0;z-index:30;box-shadow:0 2px 16px rgba(0,28,62,.07)}
-.bar-in{max-width:860px;margin:0 auto;display:grid;grid-template-columns:145px 1fr 92px 110px 130px auto;gap:10px;align-items:end}
+.bar-in{max-width:860px;margin:0 auto;display:grid;grid-template-columns:145px 1fr 124px 124px auto;gap:10px;align-items:end}
 .fl{display:flex;flex-direction:column;gap:5px}
 .fl label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g3)}
 select{width:100%;height:38px;border:2px solid var(--g1);border-radius:8px;padding:0 28px 0 10px;font-size:13px;font-family:'Barlow',sans-serif;font-weight:500;color:var(--gd);background:var(--w);cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A99BB' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;transition:border-color .15s}
@@ -23,9 +23,10 @@ select:focus{outline:none;border-color:var(--az)}
 .sem-group{display:flex;flex-direction:column;gap:5px}
 .sem-group label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g3)}
 .sem-btns{display:flex;border:2px solid var(--az);border-radius:8px;overflow:hidden;height:38px}
-.sb{flex:1;border:none;background:var(--w);font-size:12px;font-family:'Barlow',sans-serif;font-weight:700;color:var(--az);cursor:pointer;padding:0 8px;transition:all .15s;white-space:nowrap}
+.sb{position:relative;z-index:1;flex:1;border:none;background:var(--w);font-size:12px;font-family:'Barlow',sans-serif;font-weight:700;color:var(--az);cursor:pointer;padding:0 8px;transition:all .15s;white-space:nowrap}
 .sb+.sb{border-left:2px solid var(--az)}
-.sb.on{background:var(--az);color:var(--w)}
+.sb.on{color:var(--w)}
+.sem-btns:not(.seg-ready) .sb.on{background:var(--az)}
 .sb:hover:not(.on){background:var(--azpp)}
 
 /* ── MAIN ── */
@@ -70,11 +71,11 @@ select:focus{outline:none;border-color:var(--az)}
 /* ── HISTOGRAMA ── */
 .hist{background:var(--w);border-radius:var(--r);box-shadow:0 2px 12px rgba(0,28,62,.06);padding:18px 22px;margin-bottom:14px}
 .sec-lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g3);margin-bottom:14px}
-.bars{display:flex;gap:6px;align-items:flex-end;height:96px}
-.bc{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;height:100%}
+.bars{display:flex;gap:6px;align-items:flex-end;height:124px;position:relative}
+.bc{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;height:100%}
 .br{width:100%;border-radius:4px 4px 0 0;min-height:2px}
 .bpe{border:2px dashed var(--go);background:transparent!important;border-radius:4px 4px 0 0}
-.byr{font-size:9.5px;font-weight:800;margin-top:4px}
+.byr{font-size:10px;font-weight:800;height:16px;line-height:16px;white-space:nowrap}
 .bv{font-size:11px;font-weight:700}
 .hist-line{height:2px;background:var(--g1);border-radius:1px;margin-top:2px}
 .hist-leg{display:flex;gap:14px;margin-top:10px;font-size:11px;color:var(--g4);flex-wrap:wrap}
@@ -105,8 +106,13 @@ select:focus{outline:none;border-color:var(--az)}
 
 @media(max-width:640px){
   .bar-in{grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto}
-  .sem-group{grid-column:1}
-  .fl-year{grid-column:2}
+  .bar-in>.fl:nth-child(1){grid-column:1;grid-row:1}
+  .fl-year{grid-column:2;grid-row:1}
+  .bar-in>.fl:nth-child(2){grid-column:1/-1;grid-row:2}
+  .sem-group:not(.fl-year){grid-column:1;grid-row:3}
+  .rep-open-btn{grid-column:2!important;grid-row:3}
+  select,.sem-btns,.rep-open-btn{height:44px}
+  .sb{min-height:44px}
   .hero-body{grid-template-columns:1fr}
   .meta-blk{border-right:none;border-bottom:1px solid var(--g1)}
   .meta-n{font-size:60px}
@@ -114,7 +120,6 @@ select:focus{outline:none;border-color:var(--az)}
   .bar{padding:10px 12px 12px}
   .mkt-grid{grid-template-columns:1fr}
   .pdf-btn{font-size:11px;padding:6px 12px}
-  .rep-open-btn{grid-column:1/-1}
 }
 
 /* ── Botón Reporte PDF ── */
@@ -228,3 +233,24 @@ html{scrollbar-color:var(--g2) var(--g0);scrollbar-width:thin}
 .cmp .meta-delta{margin:0 0 0 auto;background:var(--w)}
 .ind-ref .ind-val{font-size:24px}
 .bc-meta:first-of-type{margin-left:6px}
+
+/* ── Control segmentado con indicador ── */
+.sem-btns{position:relative}
+.seg-ind{position:absolute;top:0;bottom:0;left:0;width:0;background:var(--az);z-index:0;pointer-events:none}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ── Línea de meta en histograma ── */
+.meta-line{position:absolute;left:0;right:0;border-top:1.5px dashed;pointer-events:none;opacity:.9}
+.meta-line span{position:absolute;right:0;bottom:2px;font-size:11px;font-weight:800;background:var(--w);padding:0 4px;border-radius:3px}
+
+/* ── Estado sin meta ── */
+.meta-empty{display:flex;flex-direction:column;gap:4px;padding:6px 0}
+.meta-empty b{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;color:var(--g4);line-height:1.05}
+.meta-empty span{font-size:12px;color:var(--g4)}
+
+/* ── Barra compacta al hacer scroll ── */
+#ttl{overflow:hidden;transition:max-height .25s,margin .25s,opacity .2s;max-height:24px}
+.bar{transition:padding .25s,box-shadow .25s}
+.bar.compact{padding-top:8px;padding-bottom:8px}
+.bar.compact #ttl{max-height:0;margin-bottom:0!important;opacity:0}
+@media(prefers-reduced-motion:reduce){#ttl,.bar{transition:none}}

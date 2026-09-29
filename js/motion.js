@@ -6,6 +6,28 @@
   mm.add('(prefers-reduced-motion: reduce)', () => { reduce = true; return () => { reduce = false; }; });
 
   const EASE = 'expo.out';
+
+  window.moveSeg = function (animate) {
+    document.querySelectorAll('.sem-btns').forEach(g => {
+      const ind = g.querySelector('.seg-ind');
+      const on = g.querySelector('.sb.on');
+      if (!ind || !on) return;
+      g.classList.add('seg-ready');
+      const vars = { x: on.offsetLeft, width: on.offsetWidth };
+      if (animate === false || reduce) gsap.set(ind, vars);
+      else gsap.to(ind, { ...vars, duration: 0.28, ease: EASE, overwrite: 'auto' });
+    });
+  };
+  window.addEventListener('load', () => moveSeg(false));
+  window.addEventListener('resize', () => moveSeg(false));
+  document.addEventListener('DOMContentLoaded', () => moveSeg(false));
+
+  if (typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+    const bar = document.querySelector('.bar');
+    if (bar) ScrollTrigger.create({ start: 60, end: 'max', onToggle: self => bar.classList.toggle('compact', self.isActive) });
+  }
+  let lastColors = null;
   let lastKey = null;
   let lastMeta = null;
 
@@ -31,6 +53,20 @@
       });
     }
 
+    const hb = out.querySelector('.hero-body');
+    const banner0 = out.querySelector('.cond-banner');
+    const cur = num ? {
+      c: getComputedStyle(num).color,
+      b: hb ? getComputedStyle(hb).borderTopColor : null,
+      bg: banner0 ? getComputedStyle(banner0).backgroundColor : null
+    } : null;
+    if (cur && lastColors && !reduce) {
+      if (lastColors.c !== cur.c) gsap.fromTo(num, { color: lastColors.c }, { color: cur.c, duration: 0.5, ease: EASE });
+      if (hb && lastColors.b !== cur.b) gsap.fromTo(hb, { borderTopColor: lastColors.b }, { borderTopColor: cur.b, duration: 0.5, ease: EASE });
+      if (banner0 && lastColors.bg !== cur.bg) gsap.fromTo(banner0, { backgroundColor: lastColors.bg }, { backgroundColor: cur.bg, duration: 0.5, ease: EASE });
+    }
+    lastColors = cur;
+
     if (reduce) return;
 
     const bars = out.querySelectorAll('.bars .br');
@@ -42,9 +78,9 @@
     if (fills.length) gsap.from(fills, { scaleX: 0, duration: 0.6, ease: EASE, stagger: 0.08, clearProps: 'transform' });
 
     const banner = out.querySelector('.cond-banner');
-    if (banner) gsap.from(banner, { autoAlpha: 0, y: 6, duration: 0.35, ease: EASE, clearProps: 'all' });
+    if (banner) gsap.from(banner, { autoAlpha: 0, y: 6, duration: 0.35, ease: EASE, clearProps: 'opacity,visibility,transform' });
     const cmp = out.querySelector('.cmp');
-    if (cmp) gsap.from(cmp.children, { autoAlpha: 0, y: 8, duration: 0.4, delay: 0.1, stagger: 0.07, ease: EASE, clearProps: 'all' });
+    if (cmp) gsap.from(cmp.children, { autoAlpha: 0, y: 8, duration: 0.4, delay: 0.1, stagger: 0.07, ease: EASE, clearProps: 'opacity,visibility,transform' });
   };
 
   const orig = window.toggleCompList;
@@ -53,6 +89,6 @@
     if (!el) return;
     const opening = el.style.display === 'none';
     if (typeof orig === 'function') orig(id);
-    if (opening && !reduce) gsap.from(el, { autoAlpha: 0, y: -6, duration: 0.3, ease: EASE, clearProps: 'all' });
+    if (opening && !reduce) gsap.from(el, { autoAlpha: 0, y: -6, duration: 0.3, ease: EASE, clearProps: 'opacity,visibility,transform' });
   };
 })();

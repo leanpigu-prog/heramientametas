@@ -85,7 +85,13 @@ function setSem(s){
   sem=s;
   document.getElementById('ba').className='sb'+(s==='A'?' on':'');
   document.getElementById('bb').className='sb'+(s==='B'?' on':'');
+  if(window.moveSeg)moveSeg();
   render();
+}
+
+function setYear(y){
+  document.getElementById('sy').value=y;
+  onYear();
 }
 
 function toggleMarco(){
@@ -234,7 +240,7 @@ function render(){
   <div class="hero-body" style="border-top-color:${C.c}">
     <div class="meta-blk">
       <div class="meta-lbl">Meta ${yr} · Sem. ${sem}</div>
-      ${meta!=null?`<div class="meta-n" style="color:${C.c}">${meta}</div><div class="meta-unit">matriculados primer curso</div>${deltaChip}`:`<div style="font-family:'Barlow Condensed',sans-serif;font-size:40px;color:var(--g3)">—</div>`}
+      ${meta!=null?`<div class="meta-n" style="color:${C.c}">${meta}</div><div class="meta-unit">matriculados primer curso</div>${deltaChip}`:`<div class="meta-empty"><b>Sin meta este semestre</b><span>No hay períodos de matrícula válidos para calcularla.</span></div>`}
       <div class="cond-banner" style="background:${C.p}">
         <span class="cond-icon">${d.cupoAnual?'📌':C.ico}</span>
         <div><div class="cond-title" style="color:${C.c}">${condTitle}</div><div class="cond-txt">${condTxt}</div></div>
@@ -265,7 +271,7 @@ function render(){
 ${mktHTML}
 <div class="hist">
   <div class="sec-lbl">Histórico matriculados · Sem. ${sem} · ${rango}</div>
-  <div class="bars">${bars}${peBar}${metaBars}</div>
+  <div class="bars">${bars}${peBar}${metaBars}${meta!=null&&meta>0?`<div class="meta-line" style="bottom:${18+Math.round((meta/maxV)*84)}px;border-color:${C.c}"><span style="color:${C.c}">Meta ${meta}</span></div>`:''}</div>
   <div class="hist-line"></div>
   <div class="hist-leg">
     <span><div class="leg-dot" style="background:${C.c}"></div>Matriculados UDES</span>
@@ -273,12 +279,17 @@ ${mktHTML}
     ${meta!=null?`<span><div class="leg-dot" style="background:${C.c};opacity:.4"></div>Meta: ${meta}</span>`:''}
   </div>
 </div>`;
+  const lv=document.getElementById('live');if(lv)lv.textContent=`${d.programa}, ${c}. Meta ${yr} semestre ${sem}: ${meta!=null?meta+' matriculados, condición '+cond:'sin meta'}.`;
   if(window.animateRender)animateRender(c+'|'+d.programa+'|'+sem+'|'+yr,meta);
 }
 
 
 
 function onYear(){
+  const yv=document.getElementById('sy').value;
+  const b26=document.getElementById('y26'),b27=document.getElementById('y27');
+  if(b26){b26.className='sb'+(yv==='2026'?' on':'');b27.className='sb'+(yv==='2027'?' on':'');}
+  if(window.moveSeg)moveSeg();
   const t=document.getElementById('ttl');
   if(t)t.textContent='Herramienta Metas Matriculados · UDES '+document.getElementById('sy').value;
   document.title='Herramienta Metas UDES '+document.getElementById('sy').value;
@@ -418,3 +429,13 @@ function toggleDemanda(btn) {
 }
 
 renderDemandaSection();
+
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  const tag=(document.activeElement?.tagName||'').toLowerCase();
+  if(tag==='input'||tag==='textarea')return;
+  if(e.key==='ArrowLeft'&&tag!=='select'){setSem('A');e.preventDefault();}
+  else if(e.key==='ArrowRight'&&tag!=='select'){setSem('B');e.preventDefault();}
+  else if(e.key==='['){setYear('2026');}
+  else if(e.key===']'){setYear('2027');}
+});
