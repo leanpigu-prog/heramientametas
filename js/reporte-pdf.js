@@ -1,6 +1,6 @@
 /**
  * Reporte PDF consolidado con filtros (campus + nivel)
- * Genera una tabla con la meta de cada programa para el periodo 2026 A/B.
+ * Genera una tabla con la meta de cada programa para el periodo del año seleccionado (2026 o 2027) A/B.
  * Reutiliza la constante global D (app.js), pdfMake (pdf-export.js) y
  * obtenerDescripcionCondicion (pdf-export.js).
  */
@@ -56,8 +56,8 @@ function abrirModalReporte() {
           <div class="rep-group">
             <div class="rep-group-head"><span>Periodo</span></div>
             <div class="rep-checks">
-              <label class="rep-chk"><input type="radio" name="rep-sem" value="A" ${semActual === 'A' ? 'checked' : ''}> 2026 A</label>
-              <label class="rep-chk"><input type="radio" name="rep-sem" value="B" ${semActual === 'B' ? 'checked' : ''}> 2026 B</label>
+              <label class="rep-chk"><input type="radio" name="rep-sem" value="A" ${semActual === 'A' ? 'checked' : ''}> ${anioSel()} A</label>
+              <label class="rep-chk"><input type="radio" name="rep-sem" value="B" ${semActual === 'B' ? 'checked' : ''}> ${anioSel()} B</label>
             </div>
           </div>
         </div>
@@ -85,6 +85,15 @@ function abrirModalReporte() {
   }
 
   modal.style.display = 'flex';
+}
+
+function anioSel() {
+  return document.getElementById('sy')?.value || '2026';
+}
+
+function datosAnio(d) {
+  const o = anioSel() === '2027' ? d.porAnio?.['2027'] : null;
+  return o ? { ...d, ...o } : d;
 }
 
 function cerrarModalReporte() {
@@ -134,7 +143,7 @@ function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
   const azul = '#003A8C';
   const content = [
     {
-      text: `Periodo: 2026 ${semParam}  ·  Meta de matriculados de primer curso`,
+      text: `Periodo: ${anioSel()} ${semParam}  ·  Meta de matriculados de primer curso`,
       fontSize: 11, color: '#555', margin: [0, 0, 0, 12]
     }
   ];
@@ -160,7 +169,7 @@ function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
             { text: 'Cupo MEN', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
             { text: 'PE', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
             { text: 'Histórico', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
-            { text: `Meta 2026 ${semParam}`, bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
+            { text: `Meta ${anioSel()} ${semParam}`, bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
             { text: 'Cond.', bold: true, fillColor: azul, color: '#fff', alignment: 'center' }
           ]
         : [
@@ -168,13 +177,14 @@ function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
             { text: 'Cupo MEN', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
             { text: 'PE', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
             { text: 'Histórico', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
-            { text: `Meta 2026 ${semParam}`, bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
+            { text: `Meta ${anioSel()} ${semParam}`, bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
             { text: 'Cond.', bold: true, fillColor: azul, color: '#fff', alignment: 'center' }
           ];
 
       const body = [headerRow];
 
-      grupo.forEach(d => {
+      grupo.forEach(d0 => {
+        const d = datosAnio(d0);
         const meta = semParam === 'A' ? d.metaA : d.metaB;
         const cond = semParam === 'A' ? d.condA : d.condB;
         const prom = semParam === 'A' ? d.promA : d.promB;
@@ -225,7 +235,7 @@ function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
     pageSize: 'A4',
     pageMargins: [40, 50, 40, 40],
     header: {
-      text: `REPORTE DE METAS UDES · 2026 ${semParam}`,
+      text: `REPORTE DE METAS UDES · ${anioSel()} ${semParam}`,
       bold: true, fontSize: 14, color: azul, alignment: 'center', margin: [0, 18, 0, 0]
     },
     footer: (currentPage, pageCount) => ({
@@ -236,5 +246,5 @@ function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
     defaultStyle: { fontSize: 10 }
   };
 
-  pdfMake.createPdf(docDefinition).download(`reporte_metas_UDES_2026${semParam}.pdf`);
+  pdfMake.createPdf(docDefinition).download(`reporte_metas_UDES_${anioSel()}${semParam}.pdf`);
 }

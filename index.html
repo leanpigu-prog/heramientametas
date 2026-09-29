@@ -10,7 +10,7 @@
 <body>
 
 <div class="bar">
-  <div style="max-width:860px;margin:0 auto 8px;font-size:13px;font-weight:700;color:var(--az);letter-spacing:.02em">Herramienta Metas Matriculados · UDES 2026</div>
+  <div id="ttl" style="max-width:860px;margin:0 auto 8px;font-size:13px;font-weight:700;color:var(--az);letter-spacing:.02em">Herramienta Metas Matriculados · UDES 2026</div>
   <div class="bar-in">
     <div class="fl">
       <label>Campus</label>
@@ -19,6 +19,10 @@
     <div class="fl">
       <label>Programa académico</label>
       <select id="sp" onchange="render()"></select>
+    </div>
+    <div class="fl" style="flex:0 0 96px">
+      <label>Año meta</label>
+      <select id="sy" onchange="onYear()"><option value="2026">2026</option><option value="2027">2027</option></select>
     </div>
     <div class="sem-group">
       <label>Semestre</label>
@@ -68,7 +72,7 @@
       <div class="mc-item"><div class="mc-dot" style="background:var(--c5)"></div><div><b>C5</b> — Hist &gt; PE + UDES lidera o utilización ≥ 50%: Meta = mín(Hist × 1.10, Cupo)</div></div>
       <div class="mc-item"><div class="mc-dot" style="background:var(--c6)"></div><div><b>C6</b> — Hist &gt; PE + utilización &lt; 50% del cupo + hay demanda privada: Meta = mín(Hist × 1.25, Cupo × 0.65)</div></div>
       <div class="mc-item"><div class="mc-dot" style="background:var(--c7)"></div><div><b>C7</b> — Menos de 2 períodos válidos de historial en este semestre puntual (programa activo, pero con admisión irregular en este semestre): Meta = Punto de Equilibrio (PE)</div></div>
-      <div class="mc-note">Hist: promedio histórico de matriculados primer curso 2019–2025 · PE: punto de equilibrio operativo · Cupo: límite autorizado MEN · Demanda privada: IES privadas con matrícula en el mismo municipio (SNIES 2019–2024).</div>
+      <div class="mc-note">Hist: promedio histórico de matriculados primer curso 2019–2025 (meta 2026) o 2019–2026 (meta 2027) · PE: punto de equilibrio operativo · Cupo: límite autorizado MEN · Demanda privada: IES privadas con matrícula en el mismo municipio (SNIES 2019–2024).</div>
     </div>
   </div>
   <div style="margin-top:8px;padding:10px 14px;font-size:11px;color:var(--g3);background:var(--g0);border-radius:6px;line-height:1.6;max-width:860px;margin-left:auto;margin-right:auto">

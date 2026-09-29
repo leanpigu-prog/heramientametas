@@ -23,23 +23,16 @@ function extractProgramDataFromUI() {
     const campus = document.getElementById('sc')?.value || 'N/A';
     const program = document.getElementById('sp')?.value || 'N/A';
     const semester = (typeof sem !== 'undefined') ? sem : 'A';
-    const year = parseInt(document.getElementById('sy')?.value || 2025);
+    const year = parseInt(document.getElementById('sy')?.value || 2026);
 
-    const d = (typeof D !== 'undefined') ? D.find(x => x.campus === campus && x.programa === program) : null;
-    if (!d) return null;
+    const d0 = (typeof D !== 'undefined') ? D.find(x => x.campus === campus && x.programa === program) : null;
+    if (!d0) return null;
+    const o27 = year === 2027 ? d0.porAnio?.['2027'] : null;
+    const d = o27 ? { ...d0, ...o27 } : d0;
 
-    // Meta / condición / histórico según corte y semestre (igual que render())
-    let prom, meta, cond;
-    if (year === 2025) {
-      prom = semester === 'A' ? d.promA : d.promB;
-      meta = semester === 'A' ? d.metaA : d.metaB;
-      cond = semester === 'A' ? d.condA : d.condB;
-    } else {
-      prom = promAdaptativo(d.hist, semester, year);
-      const hd = semester === 'A' ? d.hayDemandaA : d.hayDemandaB;
-      const [m, c] = calcMeta(prom, d.cupo, d.pe, hd, d.acreditado || false);
-      meta = m; cond = c;
-    }
+    const prom = semester === 'A' ? d.promA : d.promB;
+    const meta = semester === 'A' ? d.metaA : d.metaB;
+    const cond = semester === 'A' ? d.condA : d.condB;
 
     // Mercado
     const compV = semester === 'A' ? d.prom_comp_A : d.prom_comp_B;

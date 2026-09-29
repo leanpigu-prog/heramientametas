@@ -54,7 +54,7 @@ function exportMetaToPDF(programData) {
     campus = 'N/A',
     program = 'Programa sin nombre',
     semester = 'A',
-    year = 2025,
+    year = 2026,
     meta = 0,
     historico = 0,
     cupo = 0,
@@ -70,7 +70,7 @@ function exportMetaToPDF(programData) {
     pageSize: 'A4',
     pageMargins: [40, 40, 40, 40],
     header: {
-      text: 'REPORTE DE META DE MATRICULADOS - UDES 2026',
+      text: `REPORTE DE META DE MATRICULADOS - UDES ${year}`,
       style: 'header'
     },
     footer: (currentPage, pageCount) => ({
@@ -263,7 +263,7 @@ function exportReporteProgramas(programas, campus) {
     pageSize: 'A4',
     pageMargins: [40, 40, 40, 40],
     header: {
-      text: `REPORTE DE METAS - CAMPUS ${campus.toUpperCase()} 2026`,
+      text: `REPORTE DE METAS - CAMPUS ${campus.toUpperCase()} ${document.getElementById("sy")?.value || 2026}`,
       style: 'header'
     },
     footer: (currentPage, pageCount) => ({
