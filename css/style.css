@@ -216,3 +216,15 @@ html{scrollbar-color:var(--g2) var(--g0);scrollbar-width:thin}
 @media(prefers-reduced-motion:reduce){
   .ind-fill-udes,.ind-fill-comp,.sb,.pdf-btn{transition:none}
 }
+
+/* ── Comparación 2026 vs 2027 ── */
+.cmp{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px;margin-top:10px;padding:10px 12px;border-radius:8px;background:var(--g0)}
+.cmp-col{display:flex;flex-direction:column;gap:1px;min-width:64px}
+.cmp-l{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g3)}
+.cmp-n{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;line-height:1}
+.cmp-c{font-size:11px;font-weight:700;color:var(--g4)}
+.cmp-now .cmp-n{font-size:34px}
+.cmp-arrow{color:var(--g3);font-size:18px}
+.cmp .meta-delta{margin:0 0 0 auto;background:var(--w)}
+.ind-ref .ind-val{font-size:24px}
+.bc-meta:first-of-type{margin-left:6px}

@@ -134,7 +134,8 @@ function render(){
   const sg=v=>v==null?'—':(v>=0?'▲ ':'▼ ')+Math.abs(v).toFixed(1);
 
   const allV=YEARS.map(y=>d.hist[y]?.[sem]).filter(v=>v!=null).map(Number);
-  const maxV=Math.max(...allV,d.pe,meta||0,1);
+  const m26v=yr==='2027'?(sem==='A'?d0.metaA:d0.metaB):0;
+  const maxV=Math.max(...allV,d.pe,meta||0,m26v||0,1);
 
   const bars=YEARS.map(y=>{
     const v=d.hist[y]?.[sem];
@@ -153,7 +154,16 @@ function render(){
 
   const m26=sem==='A'?d0.metaA:d0.metaB;
   const dl=(yr==='2027'&&meta!=null&&m26!=null)?meta-m26:null;
-  const deltaChip=dl!=null?`<div class="meta-delta ${dl>0?'up':dl<0?'down':''}">vs meta 2026 (${m26}) <b>${dl>0?'▲ +'+dl:dl<0?'▼ '+Math.abs(dl):'= 0'}</b></div>`:'';
+  const c26=sem==='A'?d0.condA:d0.condB;
+  const C26=CM[c26]||CM['---'];
+  const deltaTxt=dl==null?'':(dl>0?'▲ +'+dl:dl<0?'▼ '+Math.abs(dl):'= 0');
+  const deltaChip=dl!=null?`<div class="cmp">
+      <div class="cmp-col"><span class="cmp-l">Meta 2026</span><span class="cmp-n" style="color:${C26.c}">${m26}</span><span class="cmp-c">${c26}</span></div>
+      <span class="cmp-arrow">→</span>
+      <div class="cmp-col cmp-now"><span class="cmp-l">Meta 2027</span><span class="cmp-n" style="color:${C.c}">${meta}</span><span class="cmp-c">${cond}</span></div>
+      <div class="meta-delta ${dl>0?'up':dl<0?'down':''}"><b>${deltaTxt}</b> vs 2026</div>
+    </div>`:'';
+  const metaBars=dl!=null?`<div class="bc bc-meta"><span class="bv" style="color:var(--g4)">${m26}</span><div class="br" style="height:${Math.max(Math.round((m26/maxV)*84),2)}px;background:var(--g3);opacity:.55"></div><span class="byr" style="color:var(--g4)">Meta 26</span></div><div class="bc bc-meta"><span class="bv" style="color:${C.c}">${meta}</span><div class="br" style="height:${Math.max(Math.round((meta/maxV)*84),2)}px;background:${C.c};opacity:.55"></div><span class="byr" style="color:${C.c}">Meta 27</span></div>`:'';
 
   const condTxt=d.cupoAnual?'Cupo fijo anual por resolución MEN.':C.txt;
   const condTitle=d.cupoAnual?'📌 Cupo fijo anual (MEN)':cond+' · '+C.t;
@@ -237,6 +247,12 @@ function render(){
         <span class="ind-sub">sem. ${sem} · ${rango}</span>
         ${barInd}
       </div>
+      ${dl!=null?`<div class="ind-row ind-ref">
+        <span class="ind-label">Meta 2026 (referencia)</span>
+        <span class="ind-val" style="color:var(--g4)">${m26}</span>
+        <span class="ind-sub">${C26.t}</span>
+        <div class="ind-bar"><div class="ind-fill-udes" style="width:${Math.min(Math.round(m26/d.cupo*100),100)}%;background:var(--g3)"></div></div>
+      </div>`:''}
       <div class="ind-row">
         <span class="ind-label">Meta propuesta</span>
         <span class="ind-val" style="color:${C.c}">${meta!=null?meta:'—'}</span>
@@ -249,7 +265,7 @@ function render(){
 ${mktHTML}
 <div class="hist">
   <div class="sec-lbl">Histórico matriculados · Sem. ${sem} · ${rango}</div>
-  <div class="bars">${bars}${peBar}</div>
+  <div class="bars">${bars}${peBar}${metaBars}</div>
   <div class="hist-line"></div>
   <div class="hist-leg">
     <span><div class="leg-dot" style="background:${C.c}"></div>Matriculados UDES</span>

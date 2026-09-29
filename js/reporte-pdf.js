@@ -154,6 +154,7 @@ function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
   campusSel.forEach(campus => {
     nivelesSel.forEach(nivelLabel => {
       const esPosgrado = nivelLabel === 'Posgrado';
+      const esComp = anioSel() === '2027';
       const filtroNiveles = esPosgrado ? POSGRADO_NIVELES : [nivelLabel];
       const grupo = D.filter(d => d.campus === campus && filtroNiveles.includes(d.nivel));
       if (!grupo.length) return;
@@ -170,7 +171,8 @@ function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
             { text: 'PE', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
             { text: 'Histórico', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
             { text: `Meta ${anioSel()} ${semParam}`, bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
-            { text: 'Cond.', bold: true, fillColor: azul, color: '#fff', alignment: 'center' }
+            { text: 'Cond.', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
+            ...(esComp ? [{ text: 'vs 2026', bold: true, fillColor: azul, color: '#fff', alignment: 'center' }] : [])
           ]
         : [
             { text: 'Programa', bold: true, fillColor: azul, color: '#fff' },
@@ -178,7 +180,8 @@ function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
             { text: 'PE', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
             { text: 'Histórico', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
             { text: `Meta ${anioSel()} ${semParam}`, bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
-            { text: 'Cond.', bold: true, fillColor: azul, color: '#fff', alignment: 'center' }
+            { text: 'Cond.', bold: true, fillColor: azul, color: '#fff', alignment: 'center' },
+            ...(esComp ? [{ text: 'vs 2026', bold: true, fillColor: azul, color: '#fff', alignment: 'center' }] : [])
           ];
 
       const body = [headerRow];
@@ -189,13 +192,18 @@ function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
         const cond = semParam === 'A' ? d.condA : d.condB;
         const prom = semParam === 'A' ? d.promA : d.promB;
         if (cond && cond !== '---') condsUsadas.add(cond);
+        const m26 = semParam === 'A' ? d0.metaA : d0.metaB;
+        const dl = (meta != null && m26 != null) ? meta - m26 : null;
+        const dTxt = dl == null ? '—' : (dl > 0 ? '+' + dl : String(dl));
+        const dCol = dl == null || dl === 0 ? '#555' : (dl > 0 ? '#1B6B3A' : '#8B1A1A');
         const fila = [
           { text: d.programa, fontSize: 9 },
           { text: d.cupo != null ? d.cupo.toString() : '—', alignment: 'center', fontSize: 9 },
           { text: d.pe != null ? d.pe.toString() : '—', alignment: 'center', fontSize: 9 },
           { text: prom != null ? prom.toString() : '—', alignment: 'center', fontSize: 9 },
           { text: meta != null ? meta.toString() : '—', alignment: 'center', bold: true, fontSize: 9 },
-          { text: cond || '—', alignment: 'center', fontSize: 9 }
+          { text: cond || '—', alignment: 'center', fontSize: 9 },
+          ...(esComp ? [{ text: dTxt, alignment: 'center', fontSize: 9, color: dCol }] : [])
         ];
         if (esPosgrado) fila.unshift({ text: d.nivel, fontSize: 9, color: '#555' });
         body.push(fila);
@@ -209,7 +217,7 @@ function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
         layout: 'lightHorizontalLines',
         table: {
           headerRows: 1,
-          widths: esPosgrado ? ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto'] : ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
+          widths: (esPosgrado ? ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto'] : ['*', 'auto', 'auto', 'auto', 'auto', 'auto']).concat(esComp ? ['auto'] : []),
           body
         }
       });
@@ -227,6 +235,7 @@ function exportReporteFiltrado(campusSel, nivelesSel, semParam) {
       text: [{ text: c + ': ', bold: true }, obtenerDescripcionCondicion(c)],
       fontSize: 9, color: '#555', margin: [0, 2, 0, 0]
     }));
+    if (anioSel() === '2027') content.push({ text: 'Meta 2027 = media simple 2019–2026 con las mismas condiciones que 2026; la columna "vs 2026" es la diferencia frente a la meta 2026. La matrícula 2026 de otras IES aún no está publicada por SNIES: la competencia hereda los datos existentes.', fontSize: 9, color: '#666', italics: true, margin: [0, 14, 0, 0] });
     content.push({ text: 'Marco metodológico', bold: true, color: azul, fontSize: 12, margin: [0, 16, 0, 6] });
     content.push(...leyenda);
   }

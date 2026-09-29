@@ -33,33 +33,54 @@ function extractProgramDataFromUI() {
     const prom = semester === 'A' ? d.promA : d.promB;
     const meta = semester === 'A' ? d.metaA : d.metaB;
     const cond = semester === 'A' ? d.condA : d.condB;
+    const meta26 = year === 2027 ? (semester === 'A' ? d0.metaA : d0.metaB) : null;
 
-    // Mercado
     const compV = semester === 'A' ? d.prom_comp_A : d.prom_comp_B;
+    const compPub = semester === 'A' ? d.pub_A : d.pub_B;
     const nIes = d.n_ies || 0;
     const hayDem = semester === 'A' ? d.hayDemandaA : d.hayDemandaB;
     const total = (prom || 0) + (compV || 0);
-    const pctU = total > 0 ? Math.round((prom || 0) / total * 100) : 0;
+    const pctU = !compV ? 100 : (total > 0 ? Math.round((prom || 0) / total * 100) : 0);
     const promIes = (compV && nIes > 0) ? Math.round(compV / nIes) : 0;
 
     const demanda = compV == null
       ? 'Sin dato de competencia privada'
-      : (hayDem ? `Hay demanda · ${nIes} IES privada${nIes > 1 ? 's' : ''} en el municipio`
+      : (hayDem ? `Hay demanda · ${nIes} IES privada${nIes > 1 ? 's' : ''} en el área metropolitana`
                 : 'UDES lidera el segmento privado');
+
+    const lastY = year - 1;
+    const anios = [];
+    for (let y = 2019; y <= lastY; y++) {
+      const v = d.hist?.[String(y)]?.[semester];
+      anios.push({ anio: y, valor: v != null ? Number(v) : null });
+    }
 
     return {
       campus,
       program,
+      nivel: d.nivel,
       semester,
       year,
-      meta: meta != null ? meta : 0,
-      historico: prom != null ? prom : 0,
+      meta: meta != null ? meta : null,
+      meta26: meta26 != null ? meta26 : null,
+      historico: prom != null ? prom : null,
+      rango: `2019–${lastY}`,
+      anios,
       cupo: d.cupo != null ? d.cupo : 0,
       pe: d.pe != null ? d.pe : 0,
+      acreditado: !!d.acreditado,
+      cupoAnual: !!d.cupoAnual,
       condicion: cond || '—',
       demanda,
       participacion: pctU + '%',
-      competencia: { total: compV != null ? Math.round(compV) : 0, avg: promIes }
+      equivalentes: d.programas_equiv || [],
+      competencia: {
+        total: compV != null ? Math.round(compV) : 0,
+        avg: promIes,
+        nIes,
+        pub: compPub != null ? Math.round(compPub) : null,
+        nPub: d.n_pub || 0
+      }
     };
   } catch (e) {
     console.error('Error extracting program data:', e);

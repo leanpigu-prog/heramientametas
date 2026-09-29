@@ -43,8 +43,8 @@
 
     const banner = out.querySelector('.cond-banner');
     if (banner) gsap.from(banner, { autoAlpha: 0, y: 6, duration: 0.35, ease: EASE, clearProps: 'all' });
-    const delta = out.querySelector('.meta-delta');
-    if (delta) gsap.from(delta, { autoAlpha: 0, x: -8, duration: 0.4, delay: 0.15, ease: EASE, clearProps: 'all' });
+    const cmp = out.querySelector('.cmp');
+    if (cmp) gsap.from(cmp.children, { autoAlpha: 0, y: 8, duration: 0.4, delay: 0.1, stagger: 0.07, ease: EASE, clearProps: 'all' });
   };
 
   const orig = window.toggleCompList;
