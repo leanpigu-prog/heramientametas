@@ -21,11 +21,11 @@ function buildCompTable(list,showCity){
   </tr>`).join('');
   return `<table style="width:100%;border-collapse:collapse;margin-top:8px">
     <thead><tr style="border-bottom:1px solid var(--g1)">
-      <th style="padding:4px 6px;text-align:left;font-size:10px;color:var(--g3)">Institución</th>
-      ${showCity?'<th style="padding:4px 6px;text-align:left;font-size:10px;color:var(--g3)">Ciudad</th>':''}
-      <th style="padding:4px 6px;text-align:right;font-size:10px;color:var(--g3)">Prom A</th>
-      <th style="padding:4px 6px;text-align:right;font-size:10px;color:var(--g3)">Prom B</th>
-      <th style="padding:4px 6px;text-align:right;font-size:10px;color:var(--g3)">Total 21-24</th>
+      <th style="padding:4px 6px;text-align:left;font-size:11px;color:var(--g3)">Institución</th>
+      ${showCity?'<th style="padding:4px 6px;text-align:left;font-size:11px;color:var(--g3)">Ciudad</th>':''}
+      <th style="padding:4px 6px;text-align:right;font-size:11px;color:var(--g3)">Prom A</th>
+      <th style="padding:4px 6px;text-align:right;font-size:11px;color:var(--g3)">Prom B</th>
+      <th style="padding:4px 6px;text-align:right;font-size:11px;color:var(--g3)">Total 21-24</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
@@ -151,6 +151,10 @@ function render(){
 
   const alerta=meta!=null&&meta>d.cupo?`<div style="margin-top:10px;font-size:12px;background:#FEF3E2;border-left:3px solid var(--go);padding:8px 12px;border-radius:0 6px 6px 0;color:#7A4A00">⚠ Meta (${meta}) supera cupo MEN (${d.cupo}). Verificar con Vicerrectoría.</div>`:'';
 
+  const m26=sem==='A'?d0.metaA:d0.metaB;
+  const dl=(yr==='2027'&&meta!=null&&m26!=null)?meta-m26:null;
+  const deltaChip=dl!=null?`<div class="meta-delta ${dl>0?'up':dl<0?'down':''}">vs meta 2026 (${m26}) <b>${dl>0?'▲ +'+dl:dl<0?'▼ '+Math.abs(dl):'= 0'}</b></div>`:'';
+
   const condTxt=d.cupoAnual?'Cupo fijo anual por resolución MEN.':C.txt;
   const condTitle=d.cupoAnual?'📌 Cupo fijo anual (MEN)':cond+' · '+C.t;
 
@@ -175,19 +179,19 @@ function render(){
     <div class="mkt-title">Análisis de mercado · sem. ${sem} · área metropolitana</div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
       <div style="background:var(--azpp);border-radius:8px;padding:12px 14px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g3);margin-bottom:6px">UDES · prom. histórico</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g3);margin-bottom:6px">UDES · prom. histórico</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;color:var(--az);line-height:1">${prom!=null?prom:'—'}</div>
         <div style="font-size:11px;color:var(--g3);margin-top:4px">est. · cuota de mercado: ${pctU!=null?pctU+'%':'—'}</div>
       </div>
       <div style="background:var(--g0);border-radius:8px;padding:12px 14px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g3);margin-bottom:6px">IES Privadas</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g3);margin-bottom:6px">IES Privadas</div>
         ${iesBtn(nPriv,idPriv)}
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--g4);line-height:1;margin-top:6px">${compPriv!=null?Math.round(compPriv):'—'}</div>
         <div style="font-size:11px;color:var(--g3);margin-top:2px">${promPrivIes?promPrivIes+' est./IES':'sin datos'}</div>
         <div id="${idPriv}" style="display:none">${buildCompTable(d.comp_priv||[],false)}</div>
       </div>
       <div style="background:var(--g0);border-radius:8px;padding:12px 14px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g3);margin-bottom:6px">IES Públicas</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g3);margin-bottom:6px">IES Públicas</div>
         ${iesBtn(nPub,idPub)}
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--g4);line-height:1;margin-top:6px">${compPub!=null?Math.round(compPub):'—'}</div>
         <div style="font-size:11px;color:var(--g3);margin-top:2px">${promPubIes?promPubIes+' est./IES':'sin datos'}</div>
@@ -195,11 +199,11 @@ function render(){
       </div>
     </div>
     ${demChip}
-    ${yr==='2027'?'<div style="font-size:10px;color:var(--go);margin-top:6px">Competencia: datos SNIES 2021–2024 heredados; la matrícula 2026 de otras IES aún no está publicada.</div>':''}
-    <div style="font-size:10px;color:var(--g3);margin-top:8px;padding-top:6px;border-top:1px solid var(--g1)">
+    ${yr==='2027'?'<div style="font-size:11px;color:var(--go);margin-top:6px">Competencia: datos SNIES 2021–2024 heredados; la matrícula 2026 de otras IES aún no está publicada.</div>':''}
+    <div style="font-size:11px;color:var(--g3);margin-top:8px;padding-top:6px;border-top:1px solid var(--g1)">
       Área de influencia: ${CAMPUS_METROS[c]||c}
     </div>
-    ${(d.programas_equiv||[]).length>0?`<div style="font-size:10px;color:var(--g3);margin-top:4px"><span style="font-weight:600;color:var(--g4)">También considerados en la demanda:</span> ${(d.programas_equiv||[]).join(' · ')}</div>`:''}
+    ${(d.programas_equiv||[]).length>0?`<div style="font-size:11px;color:var(--g3);margin-top:4px"><span style="font-weight:600;color:var(--g4)">También considerados en la demanda:</span> ${(d.programas_equiv||[]).join(' · ')}</div>`:''}
   </div>`;
 
   const barInd=prom!=null&&(compPriv!=null||compPub!=null)
@@ -220,7 +224,7 @@ function render(){
   <div class="hero-body" style="border-top-color:${C.c}">
     <div class="meta-blk">
       <div class="meta-lbl">Meta ${yr} · Sem. ${sem}</div>
-      ${meta!=null?`<div class="meta-n" style="color:${C.c}">${meta}</div><div class="meta-unit">matriculados primer curso</div>`:`<div style="font-family:'Barlow Condensed',sans-serif;font-size:40px;color:var(--g3)">—</div>`}
+      ${meta!=null?`<div class="meta-n" style="color:${C.c}">${meta}</div><div class="meta-unit">matriculados primer curso</div>${deltaChip}`:`<div style="font-family:'Barlow Condensed',sans-serif;font-size:40px;color:var(--g3)">—</div>`}
       <div class="cond-banner" style="background:${C.p}">
         <span class="cond-icon">${d.cupoAnual?'📌':C.ico}</span>
         <div><div class="cond-title" style="color:${C.c}">${condTitle}</div><div class="cond-txt">${condTxt}</div></div>
@@ -253,6 +257,7 @@ ${mktHTML}
     ${meta!=null?`<span><div class="leg-dot" style="background:${C.c};opacity:.4"></div>Meta: ${meta}</span>`:''}
   </div>
 </div>`;
+  if(window.animateRender)animateRender(c+'|'+d.programa+'|'+sem+'|'+yr,meta);
 }
 
 
@@ -269,7 +274,6 @@ const camps=[...new Set(D.map(d=>d.campus))].sort();
 const sc=document.getElementById('sc');
 camps.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sc.appendChild(o);});
 onCampus();
-renderDemandaSection();
 
 // ══════════════════════════════════════════════════════════════════════════
 // SECCIÓN: Demanda de Correría por Municipio
@@ -397,4 +401,4 @@ function toggleDemanda(btn) {
   if(arr) arr.classList.toggle('open', !open);
 }
 
-
+renderDemandaSection();
